@@ -1,2 +1,2 @@
 # pastrami
-Functional Cross-browser Clipboard Pastin'
+> Functional Cross-browser Clipboard Pastin'
