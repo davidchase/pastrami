@@ -1,0 +1,25 @@
+{
+  "name": "pastrami",
+  "version": "1.0.0",
+  "description": "Functional Cross-browser Clipboard Pastin'",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidchase/pastrami.git"
+  },
+  "keywords": [
+    "clipboard",
+    "paste",
+    "functional",
+    "clipboardEvent"
+  ],
+  "author": "David Chase <davidchase03@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidchase/pastrami/issues"
+  },
+  "homepage": "https://github.com/davidchase/pastrami#readme"
+}
