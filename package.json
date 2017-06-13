@@ -12,6 +12,9 @@
     "rollup-plugin-buble": "^0.15.0",
     "standard": "^10.0.2"
   },
+  "files": [
+    "dist"
+  ],
   "homepage": "https://github.com/davidchase/pastrami#readme",
   "jsnext:main": "dist/index.es.js",
   "keywords": [
