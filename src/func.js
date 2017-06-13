@@ -1,5 +1,7 @@
 const compose2 = (f, g) => x => f(g(x))
 
+export const identity = x => x
+
 export const curry = (fn, ...args) => args.length >= fn.length ? fn(...args) : curry.bind(null, fn, ...args)
 
 export const compose = (...fns) => fns.reduce(compose2)

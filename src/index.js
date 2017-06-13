@@ -1,5 +1,5 @@
 import { fromEvent, just, chain, tap, map, filter, delay } from './event'
-import { compose, pathOr, converge, concat, intersection, notEmpty, head } from './func'
+import { compose, pathOr, converge, concat, intersection, notEmpty, head, identity } from './func'
 
 const createImage = url => run => {
   const image = document.createElement('img')
@@ -17,12 +17,15 @@ const clearContent = target => target.parentNode ? clearHTML(target.parentNode) 
 const getSafariTypes = pathOr([], ['types'])
 const getChromeFFTypes = pathOr([], ['items', '0', 'type'])
 const types = converge(concat, getSafariTypes, getChromeFFTypes)
+const processFiles = event => createImage(window.URL.createObjectURL(head(event.clipboardData.files)))
+const preventDefault = event => event.preventDefault()
+const handleFiles = converge(identity, processFiles, preventDefault)
 
 const processPasteEvent =
       compose(
         tap(clearContent),
         map(targetOrChild),
-        chain(([{ clipboardData, target }]) => notEmpty(clipboardData.files) ? createImage(window.URL.createObjectURL(head(clipboardData.files))) : delay(1, just(target))),
+        chain(([event]) => notEmpty(event.clipboardData.files) ? handleFiles(event) : delay(1, just(event.target))),
         filter(([{ clipboardData }, allowedTypes]) => notEmpty(intersection(allowedTypes, types(clipboardData))))
       )
 
