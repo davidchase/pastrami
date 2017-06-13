@@ -26,5 +26,5 @@ const processPasteEvent =
         filter(([{ clipboardData }, allowedTypes]) => notEmpty(intersection(allowedTypes, types(clipboardData))))
       )
 
-export const pastrami = (elm, mimeTypes) =>
+export const pastrami = (elm, mimeTypes = []) =>
              processPasteEvent(chain(event => just([event, mimeTypes]), fromEvent('paste', elm)))
