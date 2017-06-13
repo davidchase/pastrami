@@ -1,6 +1,11 @@
 # pastrami
 > Functional Cross-browser Clipboard Pastin' Never Tasted So Good :yum:
 
+## Install
+```sh
+npm i -S pastrami
+```
+
 ## Usage
 
 ```html
