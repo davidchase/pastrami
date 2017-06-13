@@ -20,6 +20,9 @@ run(img => document.querySelector('.results').appendChild(img))
 - Needed a way to interact with [ClipboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent)
 - Cross Browser Friendly
 
+## Demo
+ https://goo.gl/M8SfWU
+
 ## API
 
 ### pastrami(element, [mime-types])
