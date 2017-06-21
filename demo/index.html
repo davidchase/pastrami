@@ -1,0 +1,30 @@
+<!doctype html>
+  <html>
+    <head>
+      <meta charset="utf-8"/>
+      <style>
+        .paste {
+          background: #333;
+          max-width: 30rem;
+          min-height: 20rem;
+          outline: none;
+        }
+        .paste:before {
+           content: 'Paste Here';
+           display: table;
+           color: #fff;
+           position: absolute;
+           top: 9rem;
+           left: 10rem;
+           font-size: 2rem;
+         }
+      </style>
+    </head>
+    <body>
+      <div contenteditable class="paste"></div>
+      <br/>
+      <br/>
+      <div class="results"></div>
+      <script src="app.js"></script>
+    </body>
+  </html>
