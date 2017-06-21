@@ -70,7 +70,6 @@ var processPasteEvent =
       compose(
         tap(clearContent),
         map(targetOrChild),
-        tap(console.log),
         chain(function (ref) {
           var event = ref[0];
 
