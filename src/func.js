@@ -16,7 +16,7 @@ export const intersection = (xs, arr) => xs
   .filter(x => arr.indexOf(x) > -1)
   .filter((x, i, og) => og.indexOf(x) === i)
 
-export const notEmpty = xs => xs.length > 0
+export const notEmpty = xs => xs && xs.length > 0
 
 export const head = xs => xs[0]
 

@@ -17,7 +17,7 @@ const clearContent = target => target.parentNode ? clearHTML(target.parentNode) 
 const getSafariTypes = pathOr([], ['types'])
 const getChromeFFTypes = pathOr([], ['items', '0', 'type'])
 const types = converge(concat, getSafariTypes, getChromeFFTypes)
-const processFiles = event => createImage(window.URL.createObjectURL(head(event.clipboardData.files)))
+const processFiles = event => createImage(window.URL.createObjectURL(head(event.clipboardData.items).getAsFile()))
 const preventDefault = event => event.preventDefault()
 const handleFiles = converge(identity, processFiles, preventDefault)
 
@@ -25,7 +25,7 @@ const processPasteEvent =
       compose(
         tap(clearContent),
         map(targetOrChild),
-        chain(([event]) => notEmpty(event.clipboardData.files) ? handleFiles(event) : delay(1, just(event.target))),
+        chain(([event]) => notEmpty(event.clipboardData.items) ? handleFiles(event) : delay(1, just(event.target))),
         filter(([{ clipboardData }, allowedTypes]) => notEmpty(intersection(allowedTypes, types(clipboardData))))
       )
 
