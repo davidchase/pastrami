@@ -26,7 +26,7 @@ run(img => document.querySelector('.results').appendChild(img))
 - Cross Browser Friendly
 
 ## Demo
- https://goo.gl/M8SfWU
+https://goo.gl/tDTBVS
 
 ## API
 
