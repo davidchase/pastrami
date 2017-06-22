@@ -48,7 +48,7 @@ MIME types to be supported when pasting
 - Chrome 59/61
 - Firefox 53
 - Safari 10
-- IE Edge
+- IE 11/Edge
 
 ## TODO
 - [ ] Add Tests
