@@ -21,13 +21,11 @@ var compose = function () {
 
 
 
-var concat = function (xs, arr) { return [].concat(xs, arr); };
+
 
 var converge = function (f, g, h) { return function (x) { return f(g(x), h(x)); }; };
 
-var intersection = function (xs, arr) { return xs
-  .filter(function (x) { return arr.indexOf(x) > -1; })
-  .filter(function (x, i, og) { return og.indexOf(x) === i; }); };
+
 
 var notEmpty = function (xs) { return xs && xs.length > 0; };
 
@@ -47,6 +45,7 @@ var delay = curry(function (ms, src, run) { return src(function (event) { return
 var fromEvent = curry(function (type, elm, run) { return elm.addEventListener(type, run); });
 
 var createImage = function (url) { return function (run) {
+  if (!url) { return }
   var image = document.createElement('img');
   image.src = url;
   image.onload = run;
@@ -59,35 +58,22 @@ var clearHTML = function (element) {
 var targetOrChild = function (event) { return event.target || head(event.childNodes); };
 var clearContent = function (target) { return target.parentNode ? clearHTML(target.parentNode) : null; };
 
-var getSafariTypes = pathOr([], ['types']);
-var getChromeFFTypes = pathOr([], ['items', '0', 'type']);
-var types = converge(concat, getSafariTypes, getChromeFFTypes);
-var processFiles = function (event) { return createImage(window.URL.createObjectURL(head(event.clipboardData.items).getAsFile())); };
+var getFile = function (blob) { return blob.getAsFile(); };
+var createObjURL = function (file) { return file && window.URL.createObjectURL(file); };
+var processFiles = compose(createImage, createObjURL, getFile, head, pathOr({}, ['clipboardData', 'items']));
 var preventDefault = function (event) { return event.preventDefault(); };
 var handleFiles = converge(identity, processFiles, preventDefault);
+var checkForItems = compose(notEmpty, pathOr({}, ['clipboardData', 'items']));
 
 var processPasteEvent =
       compose(
         tap(clearContent),
+        filter(function (target) { return target.tagName === 'IMG'; }),
         map(targetOrChild),
-        chain(function (ref) {
-          var event = ref[0];
-
-          return notEmpty(event.clipboardData.items) ? handleFiles(event) : delay(1, just(event.target));
-}),
-        filter(function (ref) {
-          var clipboardData = ref[0].clipboardData;
-          var allowedTypes = ref[1];
-
-          return notEmpty(intersection(allowedTypes, types(clipboardData)));
-})
+        chain(function (event) { return checkForItems(event) ? handleFiles(event) : delay(1, just(event.target)); })
       );
 
-var pastrami = function (elm, mimeTypes) {
-               if ( mimeTypes === void 0 ) mimeTypes = [];
-
-               return processPasteEvent(chain(function (event) { return just([event, mimeTypes]); }, fromEvent('paste', elm)));
-};
+var pastrami = function (elm) { return processPasteEvent(fromEvent('paste', elm)); };
 
 var element = document.querySelector('.paste');
 

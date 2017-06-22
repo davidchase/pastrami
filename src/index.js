@@ -2,6 +2,7 @@ import { fromEvent, just, chain, tap, map, filter, delay } from './event'
 import { compose, pathOr, converge, concat, intersection, notEmpty, head, identity } from './func'
 
 const createImage = url => run => {
+  if (!url) return
   const image = document.createElement('img')
   image.src = url
   image.onload = run
@@ -14,20 +15,19 @@ const clearHTML = element => {
 const targetOrChild = event => event.target || head(event.childNodes)
 const clearContent = target => target.parentNode ? clearHTML(target.parentNode) : null
 
-const getSafariTypes = pathOr([], ['types'])
-const getChromeFFTypes = pathOr([], ['items', '0', 'type'])
-const types = converge(concat, getSafariTypes, getChromeFFTypes)
-const processFiles = event => createImage(window.URL.createObjectURL(head(event.clipboardData.items).getAsFile()))
+const getFile = blob => blob.getAsFile()
+const createObjURL = file => file && window.URL.createObjectURL(file)
+const processFiles = compose(createImage, createObjURL, getFile, head, pathOr({}, ['clipboardData', 'items']))
 const preventDefault = event => event.preventDefault()
 const handleFiles = converge(identity, processFiles, preventDefault)
+const checkForItems = compose(notEmpty, pathOr({}, ['clipboardData', 'items']))
 
 const processPasteEvent =
       compose(
         tap(clearContent),
+        filter(target => target.tagName === 'IMG'),
         map(targetOrChild),
-        chain(([event]) => notEmpty(event.clipboardData.items) ? handleFiles(event) : delay(1, just(event.target))),
-        filter(([{ clipboardData }, allowedTypes]) => notEmpty(intersection(allowedTypes, types(clipboardData))))
+        chain(event => checkForItems(event) ? handleFiles(event) : delay(1, just(event.target)))
       )
 
-export const pastrami = (elm, mimeTypes = []) =>
-             processPasteEvent(chain(event => just([event, mimeTypes]), fromEvent('paste', elm)))
+export const pastrami = elm => processPasteEvent(fromEvent('paste', elm))
