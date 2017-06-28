@@ -16,7 +16,7 @@ npm i -S pastrami
 ```js
 import { pastrami } from 'pastrami'
 
-const run = pastrami(document.querySelector('.paste'), ['image/png'])
+const run = pastrami(document.querySelector('.paste'))
 
 run(img => document.querySelector('.results').appendChild(img))
 ```
@@ -30,7 +30,7 @@ https://goo.gl/tDTBVS
 
 ## API
 
-### pastrami(element, [mime-types])
+### pastrami(element)
 
 Returns a function with the result from clipboard
 
@@ -39,10 +39,6 @@ Type: `Element`
 
 DOM Element with a contenteditable attribute
 
-#### mime-types
-Type: `array`
-
-MIME types to be supported when pasting
 
 ## Supported Browsers
 - Chrome 59/61
