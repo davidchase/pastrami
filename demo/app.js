@@ -77,7 +77,7 @@ var pastrami = function (elm) { return processPasteEvent(fromEvent('paste', elm)
 
 var element = document.querySelector('.paste');
 
-var run = pastrami(element, ['image/png', 'image/tiff']);
+var run = pastrami(element);
 
 run(function (img) { return document.querySelector('.results').appendChild(img); });
 

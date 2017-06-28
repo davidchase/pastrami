@@ -2,6 +2,6 @@ import { pastrami } from '../src/index'
 
 const element = document.querySelector('.paste')
 
-const run = pastrami(element, ['image/png', 'image/tiff'])
+const run = pastrami(element)
 
 run(img => document.querySelector('.results').appendChild(img))
