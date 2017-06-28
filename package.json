@@ -7,10 +7,13 @@
     "url": "https://github.com/davidchase/pastrami/issues"
   },
   "devDependencies": {
+    "croppr": "^1.0.3",
     "fixpack": "^2.3.1",
     "prettier": "^1.4.4",
     "rollup": "^0.43.0",
     "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "serve": "^5.2.3",
     "standard": "^10.0.2",
     "tape": "^4.6.3"
@@ -36,9 +39,11 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "serve": "./node_modules/.bin/serve ./demo",
     "build:demo": "rollup -c demo/rollup.config.js -o demo/app.js demo/main.js && npm run serve",
-    "test": "tape",
-    "lint": "./node_modules/.bin/standard --fix src/"
+    "build:example": "rollup -c examples/cropping/rollup.config.js -o examples/cropping/app.js examples/cropping/index.js && npm run serve:example",
+    "lint": "./node_modules/.bin/standard --fix src/",
+    "serve": "./node_modules/.bin/serve ./demo",
+    "serve:example": "./node_modules/.bin/serve ./examples/cropping",
+    "test": "tape"
   }
 }
