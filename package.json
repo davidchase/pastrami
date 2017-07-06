@@ -42,6 +42,7 @@
     "build:demo": "rollup -c demo/rollup.config.js -o demo/app.js demo/main.js && npm run serve",
     "build:example": "rollup -c examples/cropping/rollup.config.js -o examples/cropping/app.js examples/cropping/index.js && npm run serve:example",
     "lint": "./node_modules/.bin/standard --fix src/",
+    "prepare": "npm run build",
     "serve": "./node_modules/.bin/serve ./demo",
     "serve:example": "./node_modules/.bin/serve ./examples/cropping",
     "test": "tape"
