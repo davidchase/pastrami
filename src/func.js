@@ -20,6 +20,13 @@ export const notEmpty = xs => xs && xs.length > 0
 
 export const head = xs => xs[0]
 
+const slice = xs => [].slice.call(xs)
+export const arrayFrom = Array.from || slice
+
+export const toType = element => ({}).toString.call(element).match(/\s([a-zA-Z]+)/)[1]
+
+export const flatMap = (fn, xs) => [].concat.apply([], xs.map(fn))
+
 export const pathOr = curry((defaultVal, paths, obj) => !obj
             ? defaultVal
             : paths.length === 0 ? obj

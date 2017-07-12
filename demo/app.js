@@ -31,6 +31,10 @@ var notEmpty = function (xs) { return xs && xs.length > 0; };
 
 var head = function (xs) { return xs[0]; };
 
+var toType = function (element) { return ({}).toString.call(element).match(/\s([a-zA-Z]+)/)[1]; };
+
+var flatMap = function (fn, xs) { return [].concat.apply([], xs.map(fn)); };
+
 var pathOr = curry(function (defaultVal, paths, obj) { return !obj
             ? defaultVal
             : paths.length === 0 ? obj
@@ -50,14 +54,9 @@ var createImage = function (url) { return function (run) {
   image.src = url;
   image.onload = run;
 }; };
-
-var clearHTML = function (element) {
-  element.innerHTML = '';
-};
-
-var targetOrChild = function (event) { return event.target || head(event.childNodes); };
-var clearContent = function (target) { return target.parentNode ? clearHTML(target.parentNode) : null; };
-
+var findElm = function (pred, xs) { return flatMap(function (x) { return x.children.length > 0 ? [].concat( x.children ) : x; }, xs).filter(pred)[0]; };
+var isImage = function (element) { return toType(element) === 'HTMLImageElement'; };
+var targetOrChild = function (event) { return event.target || findElm(isImage, [].concat( event.children )); };
 var getFile = function (blob) { return blob.getAsFile(); };
 var createObjURL = function (file) { return file && window.URL.createObjectURL(file); };
 var processFiles = compose(createImage, createObjURL, getFile, head, pathOr({}, ['clipboardData', 'items']));
@@ -67,10 +66,9 @@ var checkForItems = compose(notEmpty, pathOr({}, ['clipboardData', 'items']));
 
 var processPasteEvent =
       compose(
-        tap(clearContent),
-        filter(function (target) { return target.tagName === 'IMG'; }),
+        filter(isImage),
         map(targetOrChild),
-        chain(function (event) { return checkForItems(event) ? handleFiles(event) : delay(1, just(event.target)); })
+        chain(function (event) { return checkForItems(event) ? handleFiles(event) : delay(1, just(event.currentTarget)); })
       );
 
 var pastrami = function (elm) { return processPasteEvent(fromEvent('paste', elm)); };

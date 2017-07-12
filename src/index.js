@@ -1,5 +1,5 @@
 import { fromEvent, just, chain, tap, map, filter, delay } from './event'
-import { compose, pathOr, converge, concat, intersection, notEmpty, head, identity } from './func'
+import { compose, pathOr, converge, concat, intersection, notEmpty, head, identity, toType, flatMap, arrayFrom } from './func'
 
 const createImage = url => run => {
   if (!url) return
@@ -8,11 +8,9 @@ const createImage = url => run => {
   image.onload = run
 }
 
-const clearHTML = element => {
-  element.innerHTML = ''
-}
-
-const targetOrChild = event => event.target || head(event.childNodes)
+const findElm = (pred, xs) => flatMap(x => x.children.length > 0 ? arrayFrom(x.children) : x, xs).filter(pred)[0]
+const isImage = element => toType(element) === 'HTMLImageElement'
+const targetOrChild = event => event.target || findElm(isImage, arrayFrom(event.children))
 const clearContent = target => target.parentNode ? clearHTML(target.parentNode) : null
 
 const getFile = blob => blob.getAsFile()
@@ -24,10 +22,9 @@ const checkForItems = compose(notEmpty, pathOr({}, ['clipboardData', 'items']))
 
 const processPasteEvent =
       compose(
-        tap(clearContent),
-        filter(target => target.tagName === 'IMG'),
+        filter(isImage),
         map(targetOrChild),
-        chain(event => checkForItems(event) ? handleFiles(event) : delay(1, just(event.target)))
+        chain(event => checkForItems(event) ? handleFiles(event) : delay(1, just(event.currentTarget)))
       )
 
 export const pastrami = elm => processPasteEvent(fromEvent('paste', elm))
