@@ -25,7 +25,7 @@ export const arrayFrom = Array.from || slice
 
 export const toType = element => ({}).toString.call(element).match(/\s([a-zA-Z]+)/)[1]
 
-export const flatMap = (fn, xs) => [].concat.apply([], xs.map(fn))
+export const chain = (fn, xs) => [].concat.apply([], xs.map(fn))
 
 export const pathOr = curry((defaultVal, paths, obj) => !obj
             ? defaultVal
