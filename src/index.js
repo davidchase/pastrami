@@ -1,5 +1,5 @@
 import { fromEvent, just, chain, tap, map, filter, delay } from './event'
-import { compose, pathOr, converge, concat, intersection, notEmpty, head, identity, toType, flatMap, arrayFrom } from './func'
+import { compose, pathOr, converge, concat, intersection, notEmpty, head, identity, toType, chain, arrayFrom } from './func'
 
 const createImage = url => run => {
   if (!url) return
@@ -8,7 +8,7 @@ const createImage = url => run => {
   image.onload = run
 }
 
-const findElm = (pred, xs) => flatMap(x => x.children.length > 0 ? arrayFrom(x.children) : x, xs).filter(pred)[0]
+const findElm = (pred, xs) => chain(x => x.children.length > 0 ? arrayFrom(x.children) : x, xs).filter(pred)[0]
 const isImage = element => toType(element) === 'HTMLImageElement'
 const targetOrChild = event => event.target || findElm(isImage, arrayFrom(event.children))
 const clearContent = target => target.parentNode ? clearHTML(target.parentNode) : null
